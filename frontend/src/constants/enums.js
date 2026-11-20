@@ -1,1 +1,2 @@
 export const STATIONS=['北站','南站','东港'];export const ROLES=['admin','analyst','viewer'];export const RECEIPT_STATES=['delivered','reviewed'];export const TIMEZONE='Asia/Shanghai';
+export const WINDOW_CATEGORIES=['empty','hot','ok','gray'];export const ALERT_STATES=['open','cleared','corrected'];export const EVENT_KINDS=['trigger','clear','correction'];export const EVENT_STATES=['pending','sent','acknowledged'];

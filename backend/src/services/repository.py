@@ -6,12 +6,16 @@ from src.utils.time import now_utc,next_due
 
 def arrival_rows(s):return [dump(r) for r in s.query(Arrival).order_by(Arrival.planned_at,Arrival.id).all()]
 def save_arrival(s,data,i=None):
+ from src.services.congestion import mark_recompute
  r=s.get(Arrival,i) if i else Arrival()
  if not r:raise HTTPException(404,'到发记录不存在')
+ old_actual=r.actual_at if i else None
  for k,v in data.model_dump().items():setattr(r,k,v)
  s.add(r)
  try:s.commit()
  except IntegrityError:s.rollback();raise HTTPException(409,'班次编号重复')
+ affected=[a for a in (old_actual,r.actual_at) if a]
+ if affected:mark_recompute(s,r.station,affected);s.commit()
  return r
 
 def save_subscription(s,data,i=None):
